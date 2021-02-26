@@ -1,0 +1,85 @@
+Тестовое задание Blog разработано с применением php 7.4, Apache 2.4, MariaDB 10.3
+
+##################################################################################
+  				База данных blog_db
+
+				таблица posts_bodies 
+CREATE TABLE blog_db.posts_bodies (
+  IDp int(11) DEFAULT NULL,
+  pbText text DEFAULT NULL,
+  CONSTRAINT FK_posts_bodies_posts_IDp FOREIGN KEY (IDp)
+  REFERENCES blog_db.posts (IDp) ON DELETE CASCADE ON UPDATE RESTRICT
+)
+ENGINE = INNODB
+AVG_ROW_LENGTH = 491
+CHARACTER SET utf8
+COLLATE utf8_general_ci
+COMMENT = 'Содержимое постов'
+ROW_FORMAT = DYNAMIC;
+*********************************************************************************
+				posts 
+CREATE TABLE blog_db.posts (
+  IDp int(11) NOT NULL,
+  IDu int(11) DEFAULT NULL,
+  pTitle varchar(255) DEFAULT '''NULL''',
+  PRIMARY KEY (IDp),
+  CONSTRAINT FK_posts_users_IDu FOREIGN KEY (IDu)
+  REFERENCES blog_db.users (IDu) ON DELETE CASCADE ON UPDATE RESTRICT
+)
+ENGINE = INNODB
+AVG_ROW_LENGTH = 163
+CHARACTER SET utf8
+COLLATE utf8_general_ci
+COMMENT = 'Посты'
+ROW_FORMAT = DYNAMIC;
+*********************************************************************************
+				users 
+CREATE TABLE blog_db.users (
+  IDu int(11) NOT NULL,
+  uName varchar(255) DEFAULT '''''''NULL''''''',
+  uEmail varchar(50) DEFAULT '''''''NULL''''''',
+  IDut int(11) DEFAULT NULL,
+  PRIMARY KEY (IDu),
+  UNIQUE INDEX uEmail (uEmail),
+  CONSTRAINT FK_users_user_types_IDut FOREIGN KEY (IDut)
+  REFERENCES blog_db.user_types (IDut) ON DELETE CASCADE ON UPDATE RESTRICT
+)
+ENGINE = INNODB
+AVG_ROW_LENGTH = 160
+CHARACTER SET utf8
+COLLATE utf8_general_ci
+COMMENT = 'Пользователи'
+ROW_FORMAT = DYNAMIC;
+*********************************************************************************
+				user_types 
+CREATE TABLE blog_db.user_types (
+  IDut int(11) NOT NULL AUTO_INCREMENT,
+  utName varchar(50) DEFAULT 'NULL',
+  PRIMARY KEY (IDut)
+)
+ENGINE = INNODB
+AUTO_INCREMENT = 1
+CHARACTER SET utf8
+COLLATE utf8_general_ci
+COMMENT = 'Типы пользователей'
+ROW_FORMAT = DYNAMIC;
+*********************************************************************************
+				comments 
+CREATE TABLE blog_db.comments (
+  IDc int(11) NOT NULL,
+  IDp int(11) DEFAULT NULL,
+  IDu int(11) DEFAULT NULL,
+  cBody text DEFAULT NULL,
+  PRIMARY KEY (IDc),
+  CONSTRAINT FK_comments_posts FOREIGN KEY (IDp)
+  REFERENCES blog_db.posts (IDp) ON DELETE CASCADE ON UPDATE RESTRICT,
+  CONSTRAINT FK_comments_users FOREIGN KEY (IDu)
+  REFERENCES blog_db.users (IDu) ON DELETE CASCADE ON UPDATE RESTRICT
+)
+ENGINE = INNODB
+AVG_ROW_LENGTH = 262
+CHARACTER SET utf8
+COLLATE utf8_general_ci
+COMMENT = 'Комментарии'
+ROW_FORMAT = DYNAMIC;
+##################################################################################
